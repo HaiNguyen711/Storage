@@ -1,0 +1,782 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<svg viewBox="0 0 2301 1400" xmlns="http://www.w3.org/2000/svg" xmlns:inkspace="http://www.inkscape.org/namespaces/inkscape" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs id="defs_block">
+    <filter height="1.504" id="filter_blur" inkspace:collect="always" width="1.1575" x="-0.07875" y="-0.252">
+      <feGaussianBlur id="feGaussianBlur3780" inkspace:collect="always" stdDeviation="4.2" />
+    </filter>
+  </defs>
+  <title>blockdiag</title>
+  <desc>blockdiag {
+  orientation=portrait
+  group {
+    orientation=portrait
+    shape=line; style=none
+    group {
+      orientation=portrait
+      shape=line; style=none
+      Node0 [class=rule, label='*']
+      INPUT -&gt; Node0
+      Node1 [class=rule, label='udp dst:169.254.25.10 udp dpt:domain']
+      Node0 -&gt; Node1
+      Node2 [class=rule, label='tcp dst:169.254.25.10 tcp dpt:domain']
+      Node1 -&gt; Node2
+      Node3 [class=rule, label='*']
+      Node2 -&gt; Node3
+      Node4 [class=rule, label='*']
+      Node3 -&gt; Node4
+      INPUT [class=chain_head, shape=box]
+      Node4 -- INPUT_END -&gt; INPUT_ACCEPT
+      INPUT_END	[shape=none]
+    }
+    Node4 -- f0 -&gt; INPUT_KUBE-FIREWALL
+    Node0 -- f1 -&gt; INPUT_cali-INPUT
+    Node1 -- f2 -&gt; f3 -&gt; INPUT_ACCEPT [class=accept_line]
+    Node2 -- f4 -&gt; f5 -&gt; INPUT_ACCEPT [class=accept_line]
+    Node3 -- f6 -&gt; INPUT_KUBE-NODE-PORT
+    INPUT_ACCEPT [class=accept]
+    INPUT_cali-INPUT [class=target, class='cali-INPUT', label='cali-INPUT']
+    INPUT_KUBE-NODE-PORT [class=target, class='KUBE-NODE-PORT', label='KUBE-NODE-PORT']
+    INPUT_KUBE-FIREWALL [class=target, class='KUBE-FIREWALL', label='KUBE-FIREWALL']
+  }
+  group {
+    orientation=portrait
+    shape=line; style=none
+    group {
+      orientation=portrait
+      shape=line; style=none
+      Node5 [class=rule, label='*']
+      OUTPUT -&gt; Node5
+      Node6 [class=rule, label='udp src:169.254.25.10 udp spt:domain']
+      Node5 -&gt; Node6
+      Node7 [class=rule, label='tcp src:169.254.25.10 tcp spt:domain']
+      Node6 -&gt; Node7
+      Node8 [class=rule, label='*']
+      Node7 -&gt; Node8
+      OUTPUT [class=chain_head, shape=box]
+      Node8 -- OUTPUT_END -&gt; OUTPUT_ACCEPT
+      OUTPUT_END	[shape=none]
+    }
+    Node5 -- f7 -&gt; OUTPUT_cali-OUTPUT
+    Node6 -- f8 -&gt; f9 -&gt; OUTPUT_ACCEPT [class=accept_line]
+    Node7 -- f10 -&gt; f11 -&gt; OUTPUT_ACCEPT [class=accept_line]
+    Node8 -- f12 -&gt; OUTPUT_KUBE-FIREWALL
+    OUTPUT_cali-OUTPUT [class=target, class='cali-OUTPUT', label='cali-OUTPUT']
+    OUTPUT_ACCEPT [class=accept]
+    OUTPUT_KUBE-FIREWALL [class=target, class='KUBE-FIREWALL', label='KUBE-FIREWALL']
+  }
+  group {
+    orientation=portrait
+    shape=line; style=none
+    group {
+      orientation=portrait
+      shape=line; style=none
+      Node9 [class=rule, label='ipv4 match-set cali40all-hosts-net src ADDRTYPE match dst-type LOCAL']
+      cali-INPUT -&gt; Node9
+      Node10 [class=rule, label='ipv4']
+      Node9 -&gt; Node10
+      Node11 [class=rule, label='MARK and 0xfffff']
+      Node10 -&gt; Node11
+      Node12 [class=rule, label='*']
+      Node11 -&gt; Node12
+      Node13 [class=rule, label='mark match ! 0x0/0xfff00000']
+      Node12 -&gt; Node13
+      Node14 [class=rule, label='in:cali+ [goto]']
+      Node13 -&gt; Node14
+      Node15 [class=rule, label='mark match 0x10000/0x10000']
+      Node14 -&gt; Node15
+      Node16 [class=rule, label='MARK and 0xfff0ffff']
+      Node15 -&gt; Node16
+      Node17 [class=rule, label='*']
+      Node16 -&gt; Node17
+      Node18 [class=rule, label='mark match 0x10000/0x10000']
+      Node17 -&gt; Node18
+      cali-INPUT [class=chain_head]
+    }
+    Node15 -- f13 -&gt; cali-INPUT_ACCEPT [class=accept_line]
+    Node16 -- f14 -&gt; cali-INPUT_MARK
+    Node17 -- f15 -&gt; cali-INPUT_cali-from-host-endpoint
+    Node18 -- f16 -&gt; cali-INPUT_ACCEPT [class=accept_line]
+    Node9 -- f17 -&gt; cali-INPUT_ACCEPT [class=accept_line]
+    Node10 -- f18 -&gt; cali-INPUT_DROP [class=reject_line]
+    Node11 -- f19 -&gt; cali-INPUT_MARK
+    Node12 -- f20 -&gt; cali-INPUT_cali-forward-check
+    Node13 -- f21 -&gt; cali-INPUT_RETURN [class=return_line]
+    Node14 -- f22 -&gt; cali-INPUT_cali-wl-to-host
+    cali-INPUT_MARK [class=target, class='MARK', label='MARK']
+    cali-INPUT_cali-from-host-endpoint [class=target, class='cali-from-host-endpoint', label='cali-from-host-endpoint']
+    cali-INPUT_ACCEPT [class=accept]
+    cali-INPUT_DROP [class=drop]
+    cali-INPUT_cali-forward-check [class=target, class='cali-forward-check', label='cali-forward-check']
+    cali-INPUT_RETURN [class=return]
+    cali-INPUT_cali-wl-to-host [class=target, class='cali-wl-to-host', label='cali-wl-to-host']
+  }
+  group {
+    orientation=portrait
+    shape=line; style=none
+    group {
+      orientation=portrait
+      shape=line; style=none
+      Node19 [class=rule, label='mark match 0x10000/0x10000']
+      cali-OUTPUT -&gt; Node19
+      Node20 [class=rule, label='[goto] mark match ! 0x0/0xfff00000']
+      Node19 -&gt; Node20
+      Node21 [class=rule, label='out:cali+']
+      Node20 -&gt; Node21
+      Node22 [class=rule, label='ipv4 match-set cali40all-hosts-net dst ADDRTYPE match src-type LOCAL']
+      Node21 -&gt; Node22
+      Node23 [class=rule, label='MARK and 0xfff0ffff']
+      Node22 -&gt; Node23
+      Node24 [class=rule, label='! ctstate DNAT']
+      Node23 -&gt; Node24
+      Node25 [class=rule, label='mark match 0x10000/0x10000']
+      Node24 -&gt; Node25
+      cali-OUTPUT [class=chain_head]
+    }
+    Node24 -- f23 -&gt; cali-OUTPUT_cali-to-host-endpoint
+    Node25 -- f24 -&gt; cali-OUTPUT_ACCEPT [class=accept_line]
+    Node19 -- f25 -&gt; cali-OUTPUT_ACCEPT [class=accept_line]
+    Node20 -- f26 -&gt; cali-OUTPUT_cali-forward-endpoint-mark
+    Node21 -- f27 -&gt; cali-OUTPUT_RETURN [class=return_line]
+    Node22 -- f28 -&gt; cali-OUTPUT_ACCEPT [class=accept_line]
+    Node23 -- f29 -&gt; cali-OUTPUT_MARK
+    cali-OUTPUT_ACCEPT [class=accept]
+    cali-OUTPUT_cali-forward-endpoint-mark [class=target, class='cali-forward-endpoint-mark', label='cali-forward-endpoint-mark']
+    cali-OUTPUT_RETURN [class=return]
+    cali-OUTPUT_MARK [class=target, class='MARK', label='MARK']
+    cali-OUTPUT_cali-to-host-endpoint [class=target, class='cali-to-host-endpoint', label='cali-to-host-endpoint']
+  }
+  class chain_head [shape=ellipse]
+  class rule [shape=diamond, width=200]
+  class target [width=150]
+  class reject [color = "red", label="REJECT"]
+  class reject_line [color = "red"]
+  class drop [color = "red", label="DROP"]
+  class return [color = "#1ab3ff", label="RETURN"]
+  class return_line [color = "blue"]
+  class accept [color = "lightgreen", label="ACCEPT"]
+  class accept_line [color = "green"]
+  class fake [shape=none, width=1]
+  f0 [class=fake]
+  f1 [class=fake]
+  f2 [class=fake]
+  f3 [class=fake]
+  f4 [class=fake]
+  f5 [class=fake]
+  f6 [class=fake]
+  f7 [class=fake]
+  f8 [class=fake]
+  f9 [class=fake]
+  f10 [class=fake]
+  f11 [class=fake]
+  f12 [class=fake]
+  f13 [class=fake]
+  f14 [class=fake]
+  f15 [class=fake]
+  f16 [class=fake]
+  f17 [class=fake]
+  f18 [class=fake]
+  f19 [class=fake]
+  f20 [class=fake]
+  f21 [class=fake]
+  f22 [class=fake]
+  f23 [class=fake]
+  f24 [class=fake]
+  f25 [class=fake]
+  f26 [class=fake]
+  f27 [class=fake]
+  f28 [class=fake]
+  f29 [class=fake]
+  f30 [class=fake]
+  class ACCEPT [shape=box]
+  class MARK [shape=box]
+  class cali-OUTPUT [shape=ellipse, linecolor=black]
+  class cali-from-host-endpoint [shape=ellipse, style=dotted, linecolor="#444", textcolor="#444"]
+  class ACCEPT [shape=box]
+  class ACCEPT [shape=box]
+  class ACCEPT [shape=box]
+  class ACCEPT [shape=box]
+  class KUBE-FIREWALL [shape=ellipse, linecolor=black]
+  class ACCEPT [shape=box]
+  class DROP [shape=box]
+  class cali-forward-endpoint-mark [shape=ellipse, linecolor=black]
+  class MARK [shape=box]
+  class cali-INPUT [shape=ellipse, linecolor=black]
+  class RETURN [shape=box]
+  class cali-forward-check [shape=ellipse, linecolor=black]
+  class ACCEPT [shape=box]
+  class ACCEPT [shape=box]
+  class RETURN [shape=box]
+  class ACCEPT [shape=box]
+  class MARK [shape=box]
+  class cali-wl-to-host [shape=ellipse, linecolor=black]
+  class KUBE-NODE-PORT [shape=ellipse, linecolor=black]
+  class cali-to-host-endpoint [shape=ellipse, style=dotted, linecolor="#444", textcolor="#444"]
+  class ACCEPT [shape=box]
+  class KUBE-FIREWALL [shape=ellipse, linecolor=black]
+}
+</desc>
+  <polygon fill="rgb(0,0,0)" points="167,118 275,146 167,174 59,146 167,118" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" />
+  <rect fill="rgb(0,0,0)" height="40" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" width="128" x="103" y="46" />
+  <polygon fill="rgb(0,0,0)" points="167,198 275,226 167,254 59,226 167,198" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" />
+  <polygon fill="rgb(0,0,0)" points="167,278 275,306 167,334 59,306 167,278" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" />
+  <polygon fill="rgb(0,0,0)" points="167,358 275,386 167,414 59,386 167,358" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" />
+  <polygon fill="rgb(0,0,0)" points="167,438 275,466 167,494 59,466 167,438" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" />
+  <rect fill="rgb(0,0,0)" height="40" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" width="128" x="103" y="606" />
+  <ellipse cx="471" cy="306" fill="rgb(0,0,0)" rx="75.0" ry="20.0" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" />
+  <ellipse cx="471" cy="146" fill="rgb(0,0,0)" rx="75.0" ry="20.0" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" />
+  <ellipse cx="471" cy="466" fill="rgb(0,0,0)" rx="75.0" ry="20.0" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" />
+  <polygon fill="rgb(0,0,0)" points="710,118 818,146 710,174 602,146 710,118" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" />
+  <rect fill="rgb(0,0,0)" height="40" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" width="128" x="646" y="46" />
+  <polygon fill="rgb(0,0,0)" points="710,198 818,226 710,254 602,226 710,198" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" />
+  <polygon fill="rgb(0,0,0)" points="710,278 818,306 710,334 602,306 710,278" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" />
+  <polygon fill="rgb(0,0,0)" points="710,358 818,386 710,414 602,386 710,358" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" />
+  <rect fill="rgb(0,0,0)" height="40" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" width="128" x="646" y="526" />
+  <ellipse cx="1014" cy="146" fill="rgb(0,0,0)" rx="75.0" ry="20.0" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" />
+  <ellipse cx="1014" cy="386" fill="rgb(0,0,0)" rx="75.0" ry="20.0" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" />
+  <polygon fill="rgb(0,0,0)" points="1253,118 1361,146 1253,174 1145,146 1253,118" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" />
+  <ellipse cx="1253" cy="66" fill="rgb(0,0,0)" rx="64.0" ry="20.0" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" />
+  <polygon fill="rgb(0,0,0)" points="1253,198 1361,226 1253,254 1145,226 1253,198" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" />
+  <polygon fill="rgb(0,0,0)" points="1253,278 1361,306 1253,334 1145,306 1253,278" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" />
+  <polygon fill="rgb(0,0,0)" points="1253,358 1361,386 1253,414 1145,386 1253,358" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" />
+  <polygon fill="rgb(0,0,0)" points="1253,438 1361,466 1253,494 1145,466 1253,438" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" />
+  <polygon fill="rgb(0,0,0)" points="1253,518 1361,546 1253,574 1145,546 1253,518" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" />
+  <polygon fill="rgb(0,0,0)" points="1253,598 1361,626 1253,654 1145,626 1253,598" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" />
+  <polygon fill="rgb(0,0,0)" points="1253,678 1361,706 1253,734 1145,706 1253,678" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" />
+  <polygon fill="rgb(0,0,0)" points="1253,758 1361,786 1253,814 1145,786 1253,758" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" />
+  <polygon fill="rgb(0,0,0)" points="1253,838 1361,866 1253,894 1145,866 1253,838" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" />
+  <rect fill="rgb(0,0,0)" height="40" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" width="128" x="1493" y="606" />
+  <rect fill="rgb(0,0,0)" height="40" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" width="150" x="1482" y="686" />
+  <ellipse cx="1557" cy="1026" fill="rgb(0,0,0)" rx="75.0" ry="20.0" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" />
+  <rect fill="rgb(0,0,0)" height="40" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" width="128" x="1493" y="1086" />
+  <ellipse cx="1557" cy="1186" fill="rgb(0,0,0)" rx="75.0" ry="20.0" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" />
+  <rect fill="rgb(0,0,0)" height="40" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" width="128" x="1493" y="1246" />
+  <ellipse cx="1557" cy="1346" fill="rgb(0,0,0)" rx="75.0" ry="20.0" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" />
+  <polygon fill="rgb(0,0,0)" points="1796,118 1904,146 1796,174 1688,146 1796,118" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" />
+  <ellipse cx="1796" cy="66" fill="rgb(0,0,0)" rx="64.0" ry="20.0" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" />
+  <polygon fill="rgb(0,0,0)" points="1796,198 1904,226 1796,254 1688,226 1796,198" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" />
+  <polygon fill="rgb(0,0,0)" points="1796,278 1904,306 1796,334 1688,306 1796,278" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" />
+  <polygon fill="rgb(0,0,0)" points="1796,358 1904,386 1796,414 1688,386 1796,358" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" />
+  <polygon fill="rgb(0,0,0)" points="1796,438 1904,466 1796,494 1688,466 1796,438" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" />
+  <polygon fill="rgb(0,0,0)" points="1796,518 1904,546 1796,574 1688,546 1796,518" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" />
+  <polygon fill="rgb(0,0,0)" points="1796,598 1904,626 1796,654 1688,626 1796,598" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" />
+  <ellipse cx="2100" cy="546" fill="rgb(0,0,0)" rx="75.0" ry="20.0" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" />
+  <rect fill="rgb(0,0,0)" height="40" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" width="128" x="2036" y="606" />
+  <ellipse cx="2100" cy="866" fill="rgb(0,0,0)" rx="75.0" ry="20.0" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" />
+  <rect fill="rgb(0,0,0)" height="40" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" width="128" x="2036" y="926" />
+  <rect fill="rgb(0,0,0)" height="40" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" width="150" x="2025" y="1006" />
+  <polygon fill="rgb(255,255,255)" points="164,112 272,140 164,168 56,140 164,112" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="6" x="164.0" y="146">*</text>
+  <rect fill="rgb(255,255,255)" height="40" stroke="rgb(0,0,0)" width="128" x="100" y="40" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="30" x="164.0" y="66">INPUT</text>
+  <polygon fill="rgb(255,255,255)" points="164,192 272,220 164,248 56,220 164,192" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="108" x="164.0" y="219">udp dst:169.254.25</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="108" x="164.0" y="232">.10 udp dpt:domain</text>
+  <polygon fill="rgb(255,255,255)" points="164,272 272,300 164,328 56,300 164,272" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="108" x="164.0" y="299">tcp dst:169.254.25</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="108" x="164.0" y="312">.10 tcp dpt:domain</text>
+  <polygon fill="rgb(255,255,255)" points="164,352 272,380 164,408 56,380 164,352" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="6" x="164.0" y="386">*</text>
+  <polygon fill="rgb(255,255,255)" points="164,432 272,460 164,488 56,460 164,432" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="6" x="164.0" y="466">*</text>
+  <rect fill="rgb(144,238,144)" height="40" stroke="rgb(0,0,0)" width="128" x="100" y="600" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="36" x="164.0" y="626">ACCEPT</text>
+  <ellipse cx="468" cy="300" fill="rgb(255,255,255)" rx="75.0" ry="20.0" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="78" x="468.0" y="306">KUBE-FIREWALL</text>
+  <ellipse cx="468" cy="140" fill="rgb(255,255,255)" rx="75.0" ry="20.0" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="60" x="468.0" y="146">cali-INPUT</text>
+  <ellipse cx="468" cy="460" fill="rgb(255,255,255)" rx="75.0" ry="20.0" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="84" x="468.0" y="466">KUBE-NODE-PORT</text>
+  <polygon fill="rgb(255,255,255)" points="707,112 815,140 707,168 599,140 707,112" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="6" x="707.0" y="146">*</text>
+  <rect fill="rgb(255,255,255)" height="40" stroke="rgb(0,0,0)" width="128" x="643" y="40" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="36" x="707.0" y="66">OUTPUT</text>
+  <polygon fill="rgb(255,255,255)" points="707,192 815,220 707,248 599,220 707,192" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="108" x="707.0" y="219">udp src:169.254.25</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="108" x="707.0" y="232">.10 udp spt:domain</text>
+  <polygon fill="rgb(255,255,255)" points="707,272 815,300 707,328 599,300 707,272" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="108" x="707.0" y="299">tcp src:169.254.25</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="108" x="707.0" y="312">.10 tcp spt:domain</text>
+  <polygon fill="rgb(255,255,255)" points="707,352 815,380 707,408 599,380 707,352" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="6" x="707.0" y="386">*</text>
+  <rect fill="rgb(144,238,144)" height="40" stroke="rgb(0,0,0)" width="128" x="643" y="520" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="36" x="707.0" y="546">ACCEPT</text>
+  <ellipse cx="1011" cy="140" fill="rgb(255,255,255)" rx="75.0" ry="20.0" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="66" x="1011.0" y="146">cali-OUTPUT</text>
+  <ellipse cx="1011" cy="380" fill="rgb(255,255,255)" rx="75.0" ry="20.0" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="78" x="1011.0" y="386">KUBE-FIREWALL</text>
+  <polygon fill="rgb(255,255,255)" points="1250,112 1358,140 1250,168 1142,140 1250,112" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="108" x="1250.0" y="139">ipv4 match-set cal</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="108" x="1250.0" y="152">i40all-hosts-n ...</text>
+  <ellipse cx="1250" cy="60" fill="rgb(255,255,255)" rx="64.0" ry="20.0" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="60" x="1250.0" y="66">cali-INPUT</text>
+  <polygon fill="rgb(255,255,255)" points="1250,192 1358,220 1250,248 1142,220 1250,192" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="24" x="1250.0" y="226">ipv4</text>
+  <polygon fill="rgb(255,255,255)" points="1250,272 1358,300 1250,328 1142,300 1250,272" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="96" x="1250.0" y="306">MARK and 0xfffff</text>
+  <polygon fill="rgb(255,255,255)" points="1250,352 1358,380 1250,408 1142,380 1250,352" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="6" x="1250.0" y="386">*</text>
+  <polygon fill="rgb(255,255,255)" points="1250,432 1358,460 1250,488 1142,460 1250,432" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="108" x="1250.0" y="459">mark match ! 0x0/0</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="54" x="1250.0" y="472">xfff00000</text>
+  <polygon fill="rgb(255,255,255)" points="1250,512 1358,540 1250,568 1142,540 1250,512" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="90" x="1250.0" y="546">in:cali+ [goto]</text>
+  <polygon fill="rgb(255,255,255)" points="1250,592 1358,620 1250,648 1142,620 1250,592" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="108" x="1250.0" y="619">mark match 0x10000</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="48" x="1250.0" y="632">/0x10000</text>
+  <polygon fill="rgb(255,255,255)" points="1250,672 1358,700 1250,728 1142,700 1250,672" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="108" x="1250.0" y="699">MARK and 0xfff0fff</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="6" x="1250.0" y="712">f</text>
+  <polygon fill="rgb(255,255,255)" points="1250,752 1358,780 1250,808 1142,780 1250,752" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="6" x="1250.0" y="786">*</text>
+  <polygon fill="rgb(255,255,255)" points="1250,832 1358,860 1250,888 1142,860 1250,832" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="108" x="1250.0" y="859">mark match 0x10000</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="48" x="1250.0" y="872">/0x10000</text>
+  <rect fill="rgb(144,238,144)" height="40" stroke="rgb(0,0,0)" width="128" x="1490" y="600" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="36" x="1554.0" y="626">ACCEPT</text>
+  <rect fill="rgb(255,255,255)" height="40" stroke="rgb(0,0,0)" width="150" x="1479" y="680" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="24" x="1554.0" y="706">MARK</text>
+  <ellipse cx="1554" cy="1020" fill="rgb(255,255,255)" rx="75.0" ry="20.0" stroke="rgb(68,68,68)" stroke-dasharray="2" />
+  <text fill="rgb(68,68,68)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="132" x="1554.0" y="1026">cali-from-host-end ...</text>
+  <rect fill="rgb(255,0,0)" height="40" stroke="rgb(0,0,0)" width="128" x="1490" y="1080" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="24" x="1554.0" y="1106">DROP</text>
+  <ellipse cx="1554" cy="1180" fill="rgb(255,255,255)" rx="75.0" ry="20.0" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="108" x="1554.0" y="1186">cali-forward-check</text>
+  <rect fill="rgb(26,179,255)" height="40" stroke="rgb(0,0,0)" width="128" x="1490" y="1240" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="36" x="1554.0" y="1266">RETURN</text>
+  <ellipse cx="1554" cy="1340" fill="rgb(255,255,255)" rx="75.0" ry="20.0" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="90" x="1554.0" y="1346">cali-wl-to-host</text>
+  <polygon fill="rgb(255,255,255)" points="1793,112 1901,140 1793,168 1685,140 1793,112" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="108" x="1793.0" y="139">mark match 0x10000</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="48" x="1793.0" y="152">/0x10000</text>
+  <ellipse cx="1793" cy="60" fill="rgb(255,255,255)" rx="64.0" ry="20.0" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="66" x="1793.0" y="66">cali-OUTPUT</text>
+  <polygon fill="rgb(255,255,255)" points="1793,192 1901,220 1793,248 1685,220 1793,192" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="108" x="1793.0" y="219">[goto] mark match </text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="96" x="1793.0" y="232">! 0x0/0xfff00000</text>
+  <polygon fill="rgb(255,255,255)" points="1793,272 1901,300 1793,328 1685,300 1793,272" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="54" x="1793.0" y="306">out:cali+</text>
+  <polygon fill="rgb(255,255,255)" points="1793,352 1901,380 1793,408 1685,380 1793,352" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="108" x="1793.0" y="379">ipv4 match-set cal</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="108" x="1793.0" y="392">i40all-hosts-n ...</text>
+  <polygon fill="rgb(255,255,255)" points="1793,432 1901,460 1793,488 1685,460 1793,432" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="108" x="1793.0" y="459">MARK and 0xfff0fff</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="6" x="1793.0" y="472">f</text>
+  <polygon fill="rgb(255,255,255)" points="1793,512 1901,540 1793,568 1685,540 1793,512" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="84" x="1793.0" y="546">! ctstate DNAT</text>
+  <polygon fill="rgb(255,255,255)" points="1793,592 1901,620 1793,648 1685,620 1793,592" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="108" x="1793.0" y="619">mark match 0x10000</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="48" x="1793.0" y="632">/0x10000</text>
+  <ellipse cx="2097" cy="540" fill="rgb(255,255,255)" rx="75.0" ry="20.0" stroke="rgb(68,68,68)" stroke-dasharray="2" />
+  <text fill="rgb(68,68,68)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="126" x="2097.0" y="546">cali-to-host-endpoint</text>
+  <rect fill="rgb(144,238,144)" height="40" stroke="rgb(0,0,0)" width="128" x="2033" y="600" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="36" x="2097.0" y="626">ACCEPT</text>
+  <ellipse cx="2097" cy="860" fill="rgb(255,255,255)" rx="75.0" ry="20.0" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="132" x="2097.0" y="866">cali-forward-endpo ...</text>
+  <rect fill="rgb(26,179,255)" height="40" stroke="rgb(0,0,0)" width="128" x="2033" y="920" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="36" x="2097.0" y="946">RETURN</text>
+  <rect fill="rgb(255,255,255)" height="40" stroke="rgb(0,0,0)" width="150" x="2022" y="1000" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="24" x="2097.0" y="1026">MARK</text>
+  <path d="M 328 300 L 341.0 300" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 341.0 300.0 A4.0,4.0 0 0 1 349.0 300.0" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 349.0 300 L 385 300" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="392,300 385,296 385,304 392,300" stroke="rgb(0,0,0)" />
+  <path d="M 328 140 L 385 140" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="392,140 385,136 385,144 392,140" stroke="rgb(0,0,0)" />
+  <path d="M 328 220 L 460 220" fill="none" stroke="rgb(0,128,0)" />
+  <polygon fill="rgb(0,128,0)" points="467,220 460,216 460,224 467,220" stroke="rgb(0,128,0)" />
+  <path d="M 468 220 L 575 220" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 575 220 L 575 580" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 164 580 L 575 580" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 164 580 L 164 592" fill="none" stroke="rgb(0,128,0)" />
+  <polygon fill="rgb(0,128,0)" points="164,599 160,592 168,592 164,599" stroke="rgb(0,128,0)" />
+  <path d="M 328 380 L 341.0 380" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 341.0 380.0 A4.0,4.0 0 0 1 349.0 380.0" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 349.0 380 L 460 380" fill="none" stroke="rgb(0,128,0)" />
+  <polygon fill="rgb(0,128,0)" points="467,380 460,376 460,384 467,380" stroke="rgb(0,128,0)" />
+  <path d="M 468 380 L 575 380" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 575 380 L 575 580" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 164 580 L 575 580" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 164 580 L 164 592" fill="none" stroke="rgb(0,128,0)" />
+  <polygon fill="rgb(0,128,0)" points="164,599 160,592 168,592 164,599" stroke="rgb(0,128,0)" />
+  <path d="M 328 460 L 341.0 460" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 341.0 460.0 A4.0,4.0 0 0 1 349.0 460.0" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 349.0 460 L 385 460" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="392,460 385,456 385,464 392,460" stroke="rgb(0,0,0)" />
+  <path d="M 164 168 L 164 184" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="164,191 160,184 168,184 164,191" stroke="rgb(0,0,0)" />
+  <path d="M 272 140 L 328 140" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 164 80 L 164 104" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="164,111 160,104 168,104 164,111" stroke="rgb(0,0,0)" />
+  <path d="M 164 248 L 164 264" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="164,271 160,264 168,264 164,271" stroke="rgb(0,0,0)" />
+  <path d="M 272 220 L 328 220" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 164 328 L 164 344" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="164,351 160,344 168,344 164,351" stroke="rgb(0,0,0)" />
+  <path d="M 164 328 L 164 340" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 164 340 L 328 340" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 328 340 L 328 380" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 164 408 L 164 424" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="164,431 160,424 168,424 164,431" stroke="rgb(0,0,0)" />
+  <path d="M 164 408 L 164 420" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 164 420 L 328 420" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 328 420 L 328 460" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 164 488 L 164 540" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 164 488 L 164 500" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 164 500 L 345 500" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 345 500 L 345 265" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 328 265 L 345 265" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 328 265 L 328 300" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 164 540 L 164 592" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="164,599 160,592 168,592 164,599" stroke="rgb(0,0,0)" />
+  <path d="M 164 168 L 164 184" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="164,191 160,184 168,184 164,191" stroke="rgb(0,0,0)" />
+  <path d="M 272 140 L 328 140" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 164 80 L 164 104" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="164,111 160,104 168,104 164,111" stroke="rgb(0,0,0)" />
+  <path d="M 164 248 L 164 264" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="164,271 160,264 168,264 164,271" stroke="rgb(0,0,0)" />
+  <path d="M 272 220 L 328 220" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 164 328 L 164 344" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="164,351 160,344 168,344 164,351" stroke="rgb(0,0,0)" />
+  <path d="M 164 328 L 164 340" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 164 340 L 328 340" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 328 340 L 328 380" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 164 408 L 164 424" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="164,431 160,424 168,424 164,431" stroke="rgb(0,0,0)" />
+  <path d="M 164 408 L 164 420" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 164 420 L 328 420" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 328 420 L 328 460" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 164 488 L 164 540" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 164 488 L 164 500" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 164 500 L 345 500" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 345 500 L 345 265" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 328 265 L 345 265" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 328 265 L 328 300" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 164 540 L 164 592" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="164,599 160,592 168,592 164,599" stroke="rgb(0,0,0)" />
+  <path d="M 871 140 L 928 140" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="935,140 928,136 928,144 935,140" stroke="rgb(0,0,0)" />
+  <path d="M 871 220 L 1003 220" fill="none" stroke="rgb(0,128,0)" />
+  <polygon fill="rgb(0,128,0)" points="1010,220 1003,216 1003,224 1010,220" stroke="rgb(0,128,0)" />
+  <path d="M 1011 220 L 1118 220" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1118 220 L 1118 500" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 707 500 L 1118 500" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 707 500 L 707 512" fill="none" stroke="rgb(0,128,0)" />
+  <polygon fill="rgb(0,128,0)" points="707,519 703,512 711,512 707,519" stroke="rgb(0,128,0)" />
+  <path d="M 871 300 L 1003 300" fill="none" stroke="rgb(0,128,0)" />
+  <polygon fill="rgb(0,128,0)" points="1010,300 1003,296 1003,304 1010,300" stroke="rgb(0,128,0)" />
+  <path d="M 1011 300 L 1118 300" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1118 300 L 1118 500" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 707 500 L 1118 500" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 707 500 L 707 512" fill="none" stroke="rgb(0,128,0)" />
+  <polygon fill="rgb(0,128,0)" points="707,519 703,512 711,512 707,519" stroke="rgb(0,128,0)" />
+  <path d="M 871 380 L 928 380" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="935,380 928,376 928,384 935,380" stroke="rgb(0,0,0)" />
+  <path d="M 707 168 L 707 184" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="707,191 703,184 711,184 707,191" stroke="rgb(0,0,0)" />
+  <path d="M 815 140 L 871 140" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 707 80 L 707 104" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="707,111 703,104 711,104 707,111" stroke="rgb(0,0,0)" />
+  <path d="M 707 248 L 707 264" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="707,271 703,264 711,264 707,271" stroke="rgb(0,0,0)" />
+  <path d="M 815 220 L 871 220" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 707 328 L 707 344" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="707,351 703,344 711,344 707,351" stroke="rgb(0,0,0)" />
+  <path d="M 815 300 L 871 300" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 707 408 L 707 460" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 815 380 L 871 380" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 707 460 L 707 512" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="707,519 703,512 711,512 707,519" stroke="rgb(0,0,0)" />
+  <path d="M 707 168 L 707 184" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="707,191 703,184 711,184 707,191" stroke="rgb(0,0,0)" />
+  <path d="M 815 140 L 871 140" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 707 80 L 707 104" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="707,111 703,104 711,104 707,111" stroke="rgb(0,0,0)" />
+  <path d="M 707 248 L 707 264" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="707,271 703,264 711,264 707,271" stroke="rgb(0,0,0)" />
+  <path d="M 815 220 L 871 220" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 707 328 L 707 344" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="707,351 703,344 711,344 707,351" stroke="rgb(0,0,0)" />
+  <path d="M 815 300 L 871 300" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 707 408 L 707 460" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 815 380 L 871 380" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 707 460 L 707 512" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="707,519 703,512 711,512 707,519" stroke="rgb(0,0,0)" />
+  <path d="M 1414 620 L 1482 620" fill="none" stroke="rgb(0,128,0)" />
+  <polygon fill="rgb(0,128,0)" points="1489,620 1482,616 1482,624 1489,620" stroke="rgb(0,128,0)" />
+  <path d="M 1414 700 L 1459.0 700" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1459.0 700.0 A4.0,4.0 0 0 1 1467.0 700.0" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1467.0 700 L 1471 700" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="1478,700 1471,696 1471,704 1478,700" stroke="rgb(0,0,0)" />
+  <path d="M 1414 1020 L 1471 1020" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="1478,1020 1471,1016 1471,1024 1478,1020" stroke="rgb(0,0,0)" />
+  <path d="M 1414 860 L 1463 860" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1463 860 L 1463 620" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1463 620 L 1482 620" fill="none" stroke="rgb(0,128,0)" />
+  <polygon fill="rgb(0,128,0)" points="1489,620 1482,616 1482,624 1489,620" stroke="rgb(0,128,0)" />
+  <path d="M 1414 940 L 1463 940" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1463 940 L 1463 620" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1463 620 L 1482 620" fill="none" stroke="rgb(0,128,0)" />
+  <polygon fill="rgb(0,128,0)" points="1489,620 1482,616 1482,624 1489,620" stroke="rgb(0,128,0)" />
+  <path d="M 1414 1100 L 1482 1100" fill="none" stroke="rgb(255,0,0)" />
+  <polygon fill="rgb(255,0,0)" points="1489,1100 1482,1096 1482,1104 1489,1100" stroke="rgb(255,0,0)" />
+  <path d="M 1414 780 L 1463 780" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1463 780 L 1463 700" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1463 700 L 1471 700" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="1478,700 1471,696 1471,704 1478,700" stroke="rgb(0,0,0)" />
+  <path d="M 1414 1180 L 1471 1180" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="1478,1180 1471,1176 1471,1184 1478,1180" stroke="rgb(0,0,0)" />
+  <path d="M 1414 1260 L 1482 1260" fill="none" stroke="rgb(0,0,255)" />
+  <polygon fill="rgb(0,0,255)" points="1489,1260 1482,1256 1482,1264 1489,1260" stroke="rgb(0,0,255)" />
+  <path d="M 1414 1340 L 1471 1340" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="1478,1340 1471,1336 1471,1344 1478,1340" stroke="rgb(0,0,0)" />
+  <path d="M 1250 168 L 1250 184" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="1250,191 1246,184 1254,184 1250,191" stroke="rgb(0,0,0)" />
+  <path d="M 1250 168 L 1250 180" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1250 180 L 1382 180" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1382 180 L 1382 900" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1382 900 L 1414 900" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1414 900 L 1414 940" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1250 80 L 1250 104" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="1250,111 1246,104 1254,104 1250,111" stroke="rgb(0,0,0)" />
+  <path d="M 1250 248 L 1250 264" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="1250,271 1246,264 1254,264 1250,271" stroke="rgb(0,0,0)" />
+  <path d="M 1250 248 L 1250 260" fill="none" stroke="rgb(255,0,0)" />
+  <path d="M 1250 260 L 1382 260" fill="none" stroke="rgb(255,0,0)" />
+  <path d="M 1382 260 L 1382 1060" fill="none" stroke="rgb(255,0,0)" />
+  <path d="M 1382 1060 L 1414 1060" fill="none" stroke="rgb(255,0,0)" />
+  <path d="M 1414 1060 L 1414 1100" fill="none" stroke="rgb(255,0,0)" />
+  <path d="M 1250 328 L 1250 344" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="1250,351 1246,344 1254,344 1250,351" stroke="rgb(0,0,0)" />
+  <path d="M 1250 328 L 1250 340" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1250 340 L 1382 340" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1382 340 L 1382 740" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1382 740 L 1414 740" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1414 740 L 1414 780" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1250 408 L 1250 424" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="1250,431 1246,424 1254,424 1250,431" stroke="rgb(0,0,0)" />
+  <path d="M 1250 408 L 1250 420" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1250 420 L 1382 420" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1382 420 L 1382 1140" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1382 1140 L 1414 1140" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1414 1140 L 1414 1180" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1250 488 L 1250 504" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="1250,511 1246,504 1254,504 1250,511" stroke="rgb(0,0,0)" />
+  <path d="M 1250 488 L 1250 500" fill="none" stroke="rgb(0,0,255)" />
+  <path d="M 1250 500 L 1382 500" fill="none" stroke="rgb(0,0,255)" />
+  <path d="M 1382 500 L 1382 1220" fill="none" stroke="rgb(0,0,255)" />
+  <path d="M 1382 1220 L 1414 1220" fill="none" stroke="rgb(0,0,255)" />
+  <path d="M 1414 1220 L 1414 1260" fill="none" stroke="rgb(0,0,255)" />
+  <path d="M 1250 568 L 1250 584" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="1250,591 1246,584 1254,584 1250,591" stroke="rgb(0,0,0)" />
+  <path d="M 1250 568 L 1250 580" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1250 580 L 1382 580" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1382 580 L 1382 1300" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1382 1300 L 1414 1300" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1414 1300 L 1414 1340" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1250 648 L 1250 664" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="1250,671 1246,664 1254,664 1250,671" stroke="rgb(0,0,0)" />
+  <path d="M 1358 620 L 1378.0 620" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1378.0 620.0 A4.0,4.0 0 0 1 1386.0 620.0" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1386.0 620 L 1414 620" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1250 728 L 1250 744" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="1250,751 1246,744 1254,744 1250,751" stroke="rgb(0,0,0)" />
+  <path d="M 1358 700 L 1378.0 700" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1378.0 700.0 A4.0,4.0 0 0 1 1386.0 700.0" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1386.0 700 L 1414 700" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1250 808 L 1250 824" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="1250,831 1246,824 1254,824 1250,831" stroke="rgb(0,0,0)" />
+  <path d="M 1250 808 L 1250 820" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1250 820 L 1382 820" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1382 820 L 1382 980" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1382 980 L 1414 980" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1414 980 L 1414 1020" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1358 860 L 1378.0 860" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1378.0 860.0 A4.0,4.0 0 0 1 1386.0 860.0" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1386.0 860 L 1414 860" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1250 168 L 1250 184" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="1250,191 1246,184 1254,184 1250,191" stroke="rgb(0,0,0)" />
+  <path d="M 1250 168 L 1250 180" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1250 180 L 1382 180" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1382 180 L 1382 900" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1382 900 L 1414 900" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1414 900 L 1414 940" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1250 80 L 1250 104" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="1250,111 1246,104 1254,104 1250,111" stroke="rgb(0,0,0)" />
+  <path d="M 1250 248 L 1250 264" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="1250,271 1246,264 1254,264 1250,271" stroke="rgb(0,0,0)" />
+  <path d="M 1250 248 L 1250 260" fill="none" stroke="rgb(255,0,0)" />
+  <path d="M 1250 260 L 1382 260" fill="none" stroke="rgb(255,0,0)" />
+  <path d="M 1382 260 L 1382 1060" fill="none" stroke="rgb(255,0,0)" />
+  <path d="M 1382 1060 L 1414 1060" fill="none" stroke="rgb(255,0,0)" />
+  <path d="M 1414 1060 L 1414 1100" fill="none" stroke="rgb(255,0,0)" />
+  <path d="M 1250 328 L 1250 344" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="1250,351 1246,344 1254,344 1250,351" stroke="rgb(0,0,0)" />
+  <path d="M 1250 328 L 1250 340" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1250 340 L 1382 340" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1382 340 L 1382 740" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1382 740 L 1414 740" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1414 740 L 1414 780" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1250 408 L 1250 424" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="1250,431 1246,424 1254,424 1250,431" stroke="rgb(0,0,0)" />
+  <path d="M 1250 408 L 1250 420" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1250 420 L 1382 420" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1382 420 L 1382 1140" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1382 1140 L 1414 1140" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1414 1140 L 1414 1180" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1250 488 L 1250 504" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="1250,511 1246,504 1254,504 1250,511" stroke="rgb(0,0,0)" />
+  <path d="M 1250 488 L 1250 500" fill="none" stroke="rgb(0,0,255)" />
+  <path d="M 1250 500 L 1382 500" fill="none" stroke="rgb(0,0,255)" />
+  <path d="M 1382 500 L 1382 1220" fill="none" stroke="rgb(0,0,255)" />
+  <path d="M 1382 1220 L 1414 1220" fill="none" stroke="rgb(0,0,255)" />
+  <path d="M 1414 1220 L 1414 1260" fill="none" stroke="rgb(0,0,255)" />
+  <path d="M 1250 568 L 1250 584" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="1250,591 1246,584 1254,584 1250,591" stroke="rgb(0,0,0)" />
+  <path d="M 1250 568 L 1250 580" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1250 580 L 1382 580" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1382 580 L 1382 1300" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1382 1300 L 1414 1300" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1414 1300 L 1414 1340" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1250 648 L 1250 664" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="1250,671 1246,664 1254,664 1250,671" stroke="rgb(0,0,0)" />
+  <path d="M 1358 620 L 1378.0 620" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1378.0 620.0 A4.0,4.0 0 0 1 1386.0 620.0" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1386.0 620 L 1414 620" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1250 728 L 1250 744" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="1250,751 1246,744 1254,744 1250,751" stroke="rgb(0,0,0)" />
+  <path d="M 1358 700 L 1378.0 700" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1378.0 700.0 A4.0,4.0 0 0 1 1386.0 700.0" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1386.0 700 L 1414 700" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1250 808 L 1250 824" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="1250,831 1246,824 1254,824 1250,831" stroke="rgb(0,0,0)" />
+  <path d="M 1250 808 L 1250 820" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1250 820 L 1382 820" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1382 820 L 1382 980" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1382 980 L 1414 980" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1414 980 L 1414 1020" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1358 860 L 1378.0 860" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1378.0 860.0 A4.0,4.0 0 0 1 1386.0 860.0" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1386.0 860 L 1414 860" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1957 540 L 2014 540" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="2021,540 2014,536 2014,544 2021,540" stroke="rgb(0,0,0)" />
+  <path d="M 1957 780 L 2006 780" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 2006 780 L 2006 620" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 2006 620 L 2025 620" fill="none" stroke="rgb(0,128,0)" />
+  <polygon fill="rgb(0,128,0)" points="2032,620 2025,616 2025,624 2032,620" stroke="rgb(0,128,0)" />
+  <path d="M 1957 620 L 2025 620" fill="none" stroke="rgb(0,128,0)" />
+  <polygon fill="rgb(0,128,0)" points="2032,620 2025,616 2025,624 2032,620" stroke="rgb(0,128,0)" />
+  <path d="M 1957 860 L 2014 860" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="2021,860 2014,856 2014,864 2021,860" stroke="rgb(0,0,0)" />
+  <path d="M 1957 940 L 2025 940" fill="none" stroke="rgb(0,0,255)" />
+  <polygon fill="rgb(0,0,255)" points="2032,940 2025,936 2025,944 2032,940" stroke="rgb(0,0,255)" />
+  <path d="M 1957 700 L 2006 700" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 2006 700 L 2006 620" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 2006 620 L 2025 620" fill="none" stroke="rgb(0,128,0)" />
+  <polygon fill="rgb(0,128,0)" points="2032,620 2025,616 2025,624 2032,620" stroke="rgb(0,128,0)" />
+  <path d="M 1957 1020 L 2014 1020" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="2021,1020 2014,1016 2014,1024 2021,1020" stroke="rgb(0,0,0)" />
+  <path d="M 1793 168 L 1793 184" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="1793,191 1789,184 1797,184 1793,191" stroke="rgb(0,0,0)" />
+  <path d="M 1793 168 L 1793 180" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1793 180 L 1925 180" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1925 180 L 1925 580" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1925 580 L 1957 580" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1957 580 L 1957 620" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1793 80 L 1793 104" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="1793,111 1789,104 1797,104 1793,111" stroke="rgb(0,0,0)" />
+  <path d="M 1793 248 L 1793 264" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="1793,271 1789,264 1797,264 1793,271" stroke="rgb(0,0,0)" />
+  <path d="M 1793 248 L 1793 260" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1793 260 L 1925 260" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1925 260 L 1925 820" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1925 820 L 1957 820" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1957 820 L 1957 860" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1793 328 L 1793 344" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="1793,351 1789,344 1797,344 1793,351" stroke="rgb(0,0,0)" />
+  <path d="M 1793 328 L 1793 340" fill="none" stroke="rgb(0,0,255)" />
+  <path d="M 1793 340 L 1925 340" fill="none" stroke="rgb(0,0,255)" />
+  <path d="M 1925 340 L 1925 900" fill="none" stroke="rgb(0,0,255)" />
+  <path d="M 1925 900 L 1957 900" fill="none" stroke="rgb(0,0,255)" />
+  <path d="M 1957 900 L 1957 940" fill="none" stroke="rgb(0,0,255)" />
+  <path d="M 1793 408 L 1793 424" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="1793,431 1789,424 1797,424 1793,431" stroke="rgb(0,0,0)" />
+  <path d="M 1793 408 L 1793 420" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1793 420 L 1925 420" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1925 420 L 1925 660" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1925 660 L 1957 660" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1957 660 L 1957 700" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1793 488 L 1793 504" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="1793,511 1789,504 1797,504 1793,511" stroke="rgb(0,0,0)" />
+  <path d="M 1793 488 L 1793 500" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1793 500 L 1925 500" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1925 500 L 1925 980" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1925 980 L 1957 980" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1957 980 L 1957 1020" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1793 568 L 1793 584" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="1793,591 1789,584 1797,584 1793,591" stroke="rgb(0,0,0)" />
+  <path d="M 1901 540 L 1921.0 540" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1921.0 540.0 A4.0,4.0 0 0 1 1929.0 540.0" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1929.0 540 L 1957 540" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1793 648 L 1793 660" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1793 660 L 1925 660" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1925 660 L 1925 740" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1925 740 L 1957 740" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1957 740 L 1957 780" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1793 168 L 1793 184" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="1793,191 1789,184 1797,184 1793,191" stroke="rgb(0,0,0)" />
+  <path d="M 1793 168 L 1793 180" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1793 180 L 1925 180" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1925 180 L 1925 580" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1925 580 L 1957 580" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1957 580 L 1957 620" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1793 80 L 1793 104" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="1793,111 1789,104 1797,104 1793,111" stroke="rgb(0,0,0)" />
+  <path d="M 1793 248 L 1793 264" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="1793,271 1789,264 1797,264 1793,271" stroke="rgb(0,0,0)" />
+  <path d="M 1793 248 L 1793 260" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1793 260 L 1925 260" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1925 260 L 1925 820" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1925 820 L 1957 820" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1957 820 L 1957 860" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1793 328 L 1793 344" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="1793,351 1789,344 1797,344 1793,351" stroke="rgb(0,0,0)" />
+  <path d="M 1793 328 L 1793 340" fill="none" stroke="rgb(0,0,255)" />
+  <path d="M 1793 340 L 1925 340" fill="none" stroke="rgb(0,0,255)" />
+  <path d="M 1925 340 L 1925 900" fill="none" stroke="rgb(0,0,255)" />
+  <path d="M 1925 900 L 1957 900" fill="none" stroke="rgb(0,0,255)" />
+  <path d="M 1957 900 L 1957 940" fill="none" stroke="rgb(0,0,255)" />
+  <path d="M 1793 408 L 1793 424" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="1793,431 1789,424 1797,424 1793,431" stroke="rgb(0,0,0)" />
+  <path d="M 1793 408 L 1793 420" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1793 420 L 1925 420" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1925 420 L 1925 660" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1925 660 L 1957 660" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1957 660 L 1957 700" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1793 488 L 1793 504" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="1793,511 1789,504 1797,504 1793,511" stroke="rgb(0,0,0)" />
+  <path d="M 1793 488 L 1793 500" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1793 500 L 1925 500" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1925 500 L 1925 980" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1925 980 L 1957 980" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1957 980 L 1957 1020" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1793 568 L 1793 584" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="1793,591 1789,584 1797,584 1793,591" stroke="rgb(0,0,0)" />
+  <path d="M 1901 540 L 1921.0 540" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1921.0 540.0 A4.0,4.0 0 0 1 1929.0 540.0" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1929.0 540 L 1957 540" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1793 648 L 1793 660" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1793 660 L 1925 660" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1925 660 L 1925 740" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1925 740 L 1957 740" fill="none" stroke="rgb(0,128,0)" />
+  <path d="M 1957 740 L 1957 780" fill="none" stroke="rgb(0,128,0)" />
+  <rect fill="none" height="620" stroke="rgb(243,152,0)" stroke-dasharray="0 196605" stroke-width="3" width="495" x="56" y="30" />
+  <rect fill="none" height="620" stroke="rgb(243,152,0)" stroke-dasharray="0 196605" stroke-width="3" width="216" x="56" y="30" />
+  <rect fill="none" height="540" stroke="rgb(243,152,0)" stroke-dasharray="0 196605" stroke-width="3" width="495" x="599" y="30" />
+  <rect fill="none" height="540" stroke="rgb(243,152,0)" stroke-dasharray="0 196605" stroke-width="3" width="216" x="599" y="30" />
+  <rect fill="none" height="1340" stroke="rgb(243,152,0)" stroke-dasharray="0 196605" stroke-width="3" width="495" x="1142" y="30" />
+  <rect fill="none" height="860" stroke="rgb(243,152,0)" stroke-dasharray="0 196605" stroke-width="3" width="216" x="1142" y="30" />
+  <rect fill="none" height="1020" stroke="rgb(243,152,0)" stroke-dasharray="0 196605" stroke-width="3" width="495" x="1685" y="30" />
+  <rect fill="none" height="620" stroke="rgb(243,152,0)" stroke-dasharray="0 196605" stroke-width="3" width="216" x="1685" y="30" />
+</svg>
