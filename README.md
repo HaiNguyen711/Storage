@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 iptables-vis – visualise iptables chains
 ========================================
 
@@ -24,3 +25,6 @@ Legend
 ======
 
 ![Legend](doc/legend.svg)
+=======
+# Storage
+>>>>>>> 54b46c37e3adc759c0301c34539d4815147c1579

@@ -1,0 +1,208 @@
+blockdiag {
+  orientation=portrait
+  group {
+    orientation=portrait
+    shape=line; style=none
+    group {
+      orientation=portrait
+      shape=line; style=none
+      Node0 [class=rule, label='*']
+      INPUT -> Node0
+      Node1 [class=rule, label='udp dst:169.254.25.10 udp dpt:domain']
+      Node0 -> Node1
+      Node2 [class=rule, label='tcp dst:169.254.25.10 tcp dpt:domain']
+      Node1 -> Node2
+      Node3 [class=rule, label='*']
+      Node2 -> Node3
+      Node4 [class=rule, label='*']
+      Node3 -> Node4
+      INPUT [class=chain_head, shape=box]
+      Node4 -- INPUT_END -> INPUT_ACCEPT
+      INPUT_END	[shape=none]
+    }
+    Node4 -- f0 -> INPUT_KUBE-FIREWALL
+    Node0 -- f1 -> INPUT_cali-INPUT
+    Node1 -- f2 -> f3 -> INPUT_ACCEPT [class=accept_line]
+    Node2 -- f4 -> f5 -> INPUT_ACCEPT [class=accept_line]
+    Node3 -- f6 -> INPUT_KUBE-NODE-PORT
+    INPUT_ACCEPT [class=accept]
+    INPUT_cali-INPUT [class=target, class='cali-INPUT', label='cali-INPUT']
+    INPUT_KUBE-NODE-PORT [class=target, class='KUBE-NODE-PORT', label='KUBE-NODE-PORT']
+    INPUT_KUBE-FIREWALL [class=target, class='KUBE-FIREWALL', label='KUBE-FIREWALL']
+  }
+  group {
+    orientation=portrait
+    shape=line; style=none
+    group {
+      orientation=portrait
+      shape=line; style=none
+      Node5 [class=rule, label='*']
+      OUTPUT -> Node5
+      Node6 [class=rule, label='udp src:169.254.25.10 udp spt:domain']
+      Node5 -> Node6
+      Node7 [class=rule, label='tcp src:169.254.25.10 tcp spt:domain']
+      Node6 -> Node7
+      Node8 [class=rule, label='*']
+      Node7 -> Node8
+      OUTPUT [class=chain_head, shape=box]
+      Node8 -- OUTPUT_END -> OUTPUT_ACCEPT
+      OUTPUT_END	[shape=none]
+    }
+    Node5 -- f7 -> OUTPUT_cali-OUTPUT
+    Node6 -- f8 -> f9 -> OUTPUT_ACCEPT [class=accept_line]
+    Node7 -- f10 -> f11 -> OUTPUT_ACCEPT [class=accept_line]
+    Node8 -- f12 -> OUTPUT_KUBE-FIREWALL
+    OUTPUT_cali-OUTPUT [class=target, class='cali-OUTPUT', label='cali-OUTPUT']
+    OUTPUT_ACCEPT [class=accept]
+    OUTPUT_KUBE-FIREWALL [class=target, class='KUBE-FIREWALL', label='KUBE-FIREWALL']
+  }
+  group {
+    orientation=portrait
+    shape=line; style=none
+    group {
+      orientation=portrait
+      shape=line; style=none
+      Node9 [class=rule, label='ipv4 match-set cali40all-hosts-net src ADDRTYPE match dst-type LOCAL']
+      cali-INPUT -> Node9
+      Node10 [class=rule, label='ipv4']
+      Node9 -> Node10
+      Node11 [class=rule, label='MARK and 0xfffff']
+      Node10 -> Node11
+      Node12 [class=rule, label='*']
+      Node11 -> Node12
+      Node13 [class=rule, label='mark match ! 0x0/0xfff00000']
+      Node12 -> Node13
+      Node14 [class=rule, label='in:cali+ [goto]']
+      Node13 -> Node14
+      Node15 [class=rule, label='mark match 0x10000/0x10000']
+      Node14 -> Node15
+      Node16 [class=rule, label='MARK and 0xfff0ffff']
+      Node15 -> Node16
+      Node17 [class=rule, label='*']
+      Node16 -> Node17
+      Node18 [class=rule, label='mark match 0x10000/0x10000']
+      Node17 -> Node18
+      cali-INPUT [class=chain_head]
+    }
+    Node15 -- f13 -> cali-INPUT_ACCEPT [class=accept_line]
+    Node16 -- f14 -> cali-INPUT_MARK
+    Node17 -- f15 -> cali-INPUT_cali-from-host-endpoint
+    Node18 -- f16 -> cali-INPUT_ACCEPT [class=accept_line]
+    Node9 -- f17 -> cali-INPUT_ACCEPT [class=accept_line]
+    Node10 -- f18 -> cali-INPUT_DROP [class=reject_line]
+    Node11 -- f19 -> cali-INPUT_MARK
+    Node12 -- f20 -> cali-INPUT_cali-forward-check
+    Node13 -- f21 -> cali-INPUT_RETURN [class=return_line]
+    Node14 -- f22 -> cali-INPUT_cali-wl-to-host
+    cali-INPUT_MARK [class=target, class='MARK', label='MARK']
+    cali-INPUT_cali-from-host-endpoint [class=target, class='cali-from-host-endpoint', label='cali-from-host-endpoint']
+    cali-INPUT_ACCEPT [class=accept]
+    cali-INPUT_DROP [class=drop]
+    cali-INPUT_cali-forward-check [class=target, class='cali-forward-check', label='cali-forward-check']
+    cali-INPUT_RETURN [class=return]
+    cali-INPUT_cali-wl-to-host [class=target, class='cali-wl-to-host', label='cali-wl-to-host']
+  }
+  group {
+    orientation=portrait
+    shape=line; style=none
+    group {
+      orientation=portrait
+      shape=line; style=none
+      Node19 [class=rule, label='mark match 0x10000/0x10000']
+      cali-OUTPUT -> Node19
+      Node20 [class=rule, label='[goto] mark match ! 0x0/0xfff00000']
+      Node19 -> Node20
+      Node21 [class=rule, label='out:cali+']
+      Node20 -> Node21
+      Node22 [class=rule, label='ipv4 match-set cali40all-hosts-net dst ADDRTYPE match src-type LOCAL']
+      Node21 -> Node22
+      Node23 [class=rule, label='MARK and 0xfff0ffff']
+      Node22 -> Node23
+      Node24 [class=rule, label='! ctstate DNAT']
+      Node23 -> Node24
+      Node25 [class=rule, label='mark match 0x10000/0x10000']
+      Node24 -> Node25
+      cali-OUTPUT [class=chain_head]
+    }
+    Node24 -- f23 -> cali-OUTPUT_cali-to-host-endpoint
+    Node25 -- f24 -> cali-OUTPUT_ACCEPT [class=accept_line]
+    Node19 -- f25 -> cali-OUTPUT_ACCEPT [class=accept_line]
+    Node20 -- f26 -> cali-OUTPUT_cali-forward-endpoint-mark
+    Node21 -- f27 -> cali-OUTPUT_RETURN [class=return_line]
+    Node22 -- f28 -> cali-OUTPUT_ACCEPT [class=accept_line]
+    Node23 -- f29 -> cali-OUTPUT_MARK
+    cali-OUTPUT_ACCEPT [class=accept]
+    cali-OUTPUT_cali-forward-endpoint-mark [class=target, class='cali-forward-endpoint-mark', label='cali-forward-endpoint-mark']
+    cali-OUTPUT_RETURN [class=return]
+    cali-OUTPUT_MARK [class=target, class='MARK', label='MARK']
+    cali-OUTPUT_cali-to-host-endpoint [class=target, class='cali-to-host-endpoint', label='cali-to-host-endpoint']
+  }
+  class chain_head [shape=ellipse]
+  class rule [shape=diamond, width=200]
+  class target [width=150]
+  class reject [color = "red", label="REJECT"]
+  class reject_line [color = "red"]
+  class drop [color = "red", label="DROP"]
+  class return [color = "#1ab3ff", label="RETURN"]
+  class return_line [color = "blue"]
+  class accept [color = "lightgreen", label="ACCEPT"]
+  class accept_line [color = "green"]
+  class fake [shape=none, width=1]
+  f0 [class=fake]
+  f1 [class=fake]
+  f2 [class=fake]
+  f3 [class=fake]
+  f4 [class=fake]
+  f5 [class=fake]
+  f6 [class=fake]
+  f7 [class=fake]
+  f8 [class=fake]
+  f9 [class=fake]
+  f10 [class=fake]
+  f11 [class=fake]
+  f12 [class=fake]
+  f13 [class=fake]
+  f14 [class=fake]
+  f15 [class=fake]
+  f16 [class=fake]
+  f17 [class=fake]
+  f18 [class=fake]
+  f19 [class=fake]
+  f20 [class=fake]
+  f21 [class=fake]
+  f22 [class=fake]
+  f23 [class=fake]
+  f24 [class=fake]
+  f25 [class=fake]
+  f26 [class=fake]
+  f27 [class=fake]
+  f28 [class=fake]
+  f29 [class=fake]
+  f30 [class=fake]
+  class ACCEPT [shape=box]
+  class MARK [shape=box]
+  class cali-OUTPUT [shape=ellipse, linecolor=black]
+  class cali-from-host-endpoint [shape=ellipse, style=dotted, linecolor="#444", textcolor="#444"]
+  class ACCEPT [shape=box]
+  class ACCEPT [shape=box]
+  class ACCEPT [shape=box]
+  class ACCEPT [shape=box]
+  class KUBE-FIREWALL [shape=ellipse, linecolor=black]
+  class ACCEPT [shape=box]
+  class DROP [shape=box]
+  class cali-forward-endpoint-mark [shape=ellipse, linecolor=black]
+  class MARK [shape=box]
+  class cali-INPUT [shape=ellipse, linecolor=black]
+  class RETURN [shape=box]
+  class cali-forward-check [shape=ellipse, linecolor=black]
+  class ACCEPT [shape=box]
+  class ACCEPT [shape=box]
+  class RETURN [shape=box]
+  class ACCEPT [shape=box]
+  class MARK [shape=box]
+  class cali-wl-to-host [shape=ellipse, linecolor=black]
+  class KUBE-NODE-PORT [shape=ellipse, linecolor=black]
+  class cali-to-host-endpoint [shape=ellipse, style=dotted, linecolor="#444", textcolor="#444"]
+  class ACCEPT [shape=box]
+  class KUBE-FIREWALL [shape=ellipse, linecolor=black]
+}
